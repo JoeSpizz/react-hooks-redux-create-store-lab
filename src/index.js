@@ -1,10 +1,23 @@
 // Note: createStore and candyReducer must be exported for the tests to run
 
-export function createStore() {
+export function createStore(candyReducer) {
   // write your createStore code here
+  let state
+ 
+  function dispatch(action){
+    state = candyReducer(action, state)
+    render()
+  }
+  function getState(){
+    return state
+  }
+  return {
+    getState,
+    dispatch
+  }
 }
 
-export function candyReducer(state = [], action) {
+export function candyReducer(action, state = []) {
   switch (action.type) {
     case "candies/add":
       return [...state, action.candy];
@@ -21,6 +34,8 @@ function render() {
     throw new Error("the store's state has not been defined yet");
   }
 }
+let store = createStore(candyReducer)
+store.dispatch({type: "@@INIT"})
 
 // Use your createStore function and the functions provided here to create a store.
 // Once the store is created, call an initial dispatch.
